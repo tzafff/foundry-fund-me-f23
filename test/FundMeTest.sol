@@ -15,4 +15,11 @@ contract FundMeTest is Test{
     function testMinimumDollarIsFive() public view{
         assertEq(fundMe.MINIMUM_USD(), 5e18);
     }
+
+    function testOwnerIsMsgSender() public view {
+        // us --> FundMeTEST --> FundMe
+        // So the deployer of the FundMe is that TestContract "FundMeTest"
+        assertEq(fundMe.i_owner(), address(this));
+
+    }
 }
