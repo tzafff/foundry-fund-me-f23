@@ -79,7 +79,7 @@ contract FundMeTest is Test {
         // uint256 gasStart = gasleft(); // 1000
         // vm.txGasPrice(GAS_PRICE);
         vm.prank(fundMe.getOwner()); // c:200
-        fundMe.withdraw();  // should have spend gas?
+        fundMe.withdraw(); // should have spend gas?
 
         // uint256 gasEnd = gasleft(); // 800
         // uint256 gasUsed = (gasStart - gasEnd) * tx.gasprice;
@@ -89,19 +89,16 @@ contract FundMeTest is Test {
         uint256 endingOwnerBalance = fundMe.getOwner().balance;
         uint256 endingFundMeBalance = address(fundMe).balance;
         assertEq(endingFundMeBalance, 0);
-        assertEq(
-            startingFundMeBalance + startingOwnerBalance,
-            endingOwnerBalance
-        );
+        assertEq(startingFundMeBalance + startingOwnerBalance, endingOwnerBalance);
     }
 
     function testWithDrawFromMultipleFunders() public funded {
         uint160 numberOfFunders = 10;
         uint160 startingFunderIndex = 1;
 
-        for(uint160 i = startingFunderIndex; i < numberOfFunders; i++) {
+        for (uint160 i = startingFunderIndex; i < numberOfFunders; i++) {
             // vm.prank new address
-            // vm.deal new address 
+            // vm.deal new address
             hoax(address(i), SEND_VALUE);
             fundMe.fund{value: SEND_VALUE}();
             // fund the fundMe
@@ -110,24 +107,23 @@ contract FundMeTest is Test {
         uint256 startingOwnerBalance = fundMe.getOwner().balance;
         uint256 startingFundMeBalance = address(fundMe).balance;
 
-        // Act:  Using start/stop prank like start/stop broadcast. 
+        // Act:  Using start/stop prank like start/stop broadcast.
         vm.startPrank(fundMe.getOwner());
         fundMe.withdraw();
         vm.stopPrank();
-        
+
         // Assert
         assert(address(fundMe).balance == 0);
         assert(startingFundMeBalance + startingOwnerBalance == fundMe.getOwner().balance);
     }
 
-
     function testWithDrawFromMultipleFundersCheaper() public funded {
         uint160 numberOfFunders = 10;
         uint160 startingFunderIndex = 1;
 
-        for(uint160 i = startingFunderIndex; i < numberOfFunders; i++) {
+        for (uint160 i = startingFunderIndex; i < numberOfFunders; i++) {
             // vm.prank new address
-            // vm.deal new address 
+            // vm.deal new address
             hoax(address(i), SEND_VALUE);
             fundMe.fund{value: SEND_VALUE}();
             // fund the fundMe
@@ -136,11 +132,11 @@ contract FundMeTest is Test {
         uint256 startingOwnerBalance = fundMe.getOwner().balance;
         uint256 startingFundMeBalance = address(fundMe).balance;
 
-        // Act:  Using start/stop prank like start/stop broadcast. 
+        // Act:  Using start/stop prank like start/stop broadcast.
         vm.startPrank(fundMe.getOwner());
         fundMe.cheaperWithdraw();
         vm.stopPrank();
-        
+
         // Assert
         assert(address(fundMe).balance == 0);
         assert(startingFundMeBalance + startingOwnerBalance == fundMe.getOwner().balance);
